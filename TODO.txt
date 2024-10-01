@@ -1,0 +1,6 @@
+-implement BFS and any other solutions for #133 Clone Graph
+-implement better solution for #1 Two Sum
+-check to see if better solution for #948 Bag of Tokens exists
+-check to see if better solution for #53 Maximum Subarray exists
+-rewrite #53 in Java (optional, low priority)
+-rewrite all solutions in other languages (optional, low priority)
