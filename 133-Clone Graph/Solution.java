@@ -22,13 +22,17 @@ class Node {
 
 class Solution {
     public Node cloneGraph(Node node) {
-        /*DFS 
+        /*DFS
         Map<Integer, Node> visited = new HashMap<>();
         return cloneGraphDFS(node, visited);
         */
+
+        /*BFS with queue */
+        Map<Integer, Node> visited = new HashMap<>();
+        return cloneGraphBFS(node, visited);
     }
 
-    /*DFS
+    /*DFS recursive
     public Node cloneGraphDFS(Node node, Map<Integer, Node> visited) {
         if (node == null) return node;
         Node copy = new Node(node.val);
@@ -41,17 +45,32 @@ class Solution {
         return copy;
     }
     */
-
-    /* BFS */
+    
+    /* BFS with queue*/
     public Node cloneGraphBFS(Node node, Map<Integer, Node> visited) {
         if (node == null) return node;
         Node copy = new Node(node.val);
         visited.put(node.val, copy);
-        for (Node neighbor : node.neighbors) {
-            if (!visited.containsKey(neighbor.val)) copy.neighbors.add(cloneGraphDFS(neighbor, visited));
-            else copy.neighbors.add(visited.get(neighbor.val));
+        Queue<Node> neighbors = new LinkedList<Node>();
+        for (Node neighbor : node.neighbors) { neighbors.add(neighbor); } //initialize with node 1's neighbors so that the while loop will actually run
+
+        Node current = neighbors.poll();
+        while (current != null /*while not empty*/) {
+            if (visited.containsKey(current.val))
+                copy.neighbors.add(visited.get(current.val));
+            else {
+                Node temp = new Node(current.val); //not really temporary, but idk what to call it
+                copy.neighbors.add(temp);
+                visited.put(temp.val, temp);
+                for (Node n : current.neighbors) if (!visited.containsKey(n.val)) neighbors.add(n);
+            }
+
+            current = neighbors.poll();
+            if (current != null)
+                copy = visited.containsKey(current.val) ? visited.get(current.val) : new Node(current.val);
         }
 
-        return copy;
+        return visited.get(1);
     }
+    
 }
