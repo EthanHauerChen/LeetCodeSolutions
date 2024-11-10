@@ -49,25 +49,31 @@ class Solution {
     /* BFS with queue*/
     public Node cloneGraphBFS(Node node, Map<Integer, Node> visited) {
         if (node == null) return node;
-        Node copy = new Node(node.val);
-        visited.put(node.val, copy);
         Queue<Node> neighbors = new LinkedList<Node>();
-        for (Node neighbor : node.neighbors) { neighbors.add(neighbor); } //initialize with node 1's neighbors so that the while loop will actually run
+        neighbors.add(node);
 
-        Node current = neighbors.poll();
-        while (current != null /*while not empty*/) {
-            if (visited.containsKey(current.val))
-                copy.neighbors.add(visited.get(current.val));
-            else {
-                Node temp = new Node(current.val); //not really temporary, but idk what to call it
-                copy.neighbors.add(temp);
-                visited.put(temp.val, temp);
-                for (Node n : current.neighbors) if (!visited.containsKey(n.val)) neighbors.add(n);
+        while(neighbors.size() != 0) {
+            Node current = neighbors.poll();
+            Node copy = visited.containsKey(current.val) ? visited.get(current.val) : new Node(current.val);
+            visited.put(copy.val, copy);
+            //find all neighbors and add copies of those neighbors to the copy Node's neighbor list
+            //and add unvisited neighbors to the queue
+            for (Node n : current.neighbors) {
+                if (visited.containsKey(n.val)) {
+                    copy.neighbors.add(visited.get(n.val));
+                }
+                else {
+                    //create copy of neighbor node and add it to copy's neighbor list
+                    Node neighbor = new Node(n.val);
+                    copy.neighbors.add(neighbor); 
+                    //add copy of neighbor node to visited map
+                    visited.put(neighbor.val, neighbor);
+                    //add neighbor node to queue
+                    neighbors.add(n);
+                }
             }
 
-            current = neighbors.poll();
-            if (current != null)
-                copy = visited.containsKey(current.val) ? visited.get(current.val) : new Node(current.val);
+            
         }
 
         return visited.get(1);
