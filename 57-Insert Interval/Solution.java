@@ -2,6 +2,8 @@
 
 class Solution {
     public int[][] insert(int[][] intervals, int[] newInterval) {
+        if (intervals.length == 0) return new int[][] {newInterval};
+
         int index = binarySearch(newInterval[0], intervals);
         System.out.println("Index: " + index);
 
@@ -18,7 +20,7 @@ class Solution {
 
         //newInterval fits within intervals[index] OR newInterval end < intervals[index+1][0]
         if (endIndex == index) {
-            intervals[index] = new int[] {intervals[index][0], newInterval[1]};
+            intervals[index] = new int[] {intervals[index][0], Math.max(newInterval[1], intervals[index][1])};
             return intervals;
         }
         
@@ -29,10 +31,7 @@ class Solution {
             if (i == index) {
                 // newArray[i] = new int[] {intervals[index][0], intervals[index+1][1]};
                 // counter++;
-                if (newInterval[1] <= intervals[endIndex][1]) //ternary operator would be cooler and more clever but for the sake of clarity, using normal conditionals
-                    newArray[i] = new int[] {intervals[index][0], intervals[endIndex][1]};
-                else
-                    newArray[i] = new int[] {intervals[index][0], newInterval[1]};
+                newArray[i] = new int[] {intervals[index][0], Math.max(newInterval[1], intervals[endIndex][1])};
                 counter += endIndex - index;
             }
             else newArray[i] = intervals[counter];
@@ -64,6 +63,7 @@ class Solution {
 
     /**returns index of where to insert */
     public int binarySearch(int newIntervalStart, int[][] intervals) {
+        if (intervals.length == 0) return 0;
         int first = 0;
         int last = intervals.length;
         int middle = (first + last) / 2;
