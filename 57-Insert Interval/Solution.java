@@ -4,23 +4,45 @@ class Solution {
     public int[][] insert(int[][] intervals, int[] newInterval) {
         if (intervals.length == 0) return new int[][] {newInterval};
 
-        int index = binarySearch(newInterval[0], intervals);
+        int index = binarySearch(newInterval, intervals);
         System.out.println("Index: " + index);
 
-        //2 cases (based on the way I wrote this program)
-        //newInterval fits within intervals[index]
-        //newInterval end is greater than intervals[index][1] AND newInterval start is within intervals[index]
-        //NOTE: newInterval start is ALWAYS within intervals[index]
-        //NOTE: newInterval end may be larger than intervals[index+n] for 0 <= n <= intervals
+        //binarySearch function should always return the index where newInterval should go. However:
+        //if newInterval belongs before the 0th element of intervals, then binarySearch should return -1
+        //if newInterval belongs after the last element of intervals, then binarySearch should return intervals.length (which is out of bounds)
+        if (index == -1) {
+            int[][] newArray = new int[intervals.length+1][];
+            newArray[0] = newInterval;
+            for (int i = 0; i < intervals.length; i++)
+                newArray[i+1] = intervals[i];
+            return newArray;
+        }
+        else if (index == intervals.length) {
+            int[][] newArray = new int[intervals.length+1][];
+            newArray[intervals.length] = newInterval;
+            for (int i = 0; i < intervals.length; i++)
+                newArray[i] = intervals[i];
+            return newArray;
+        }
 
         int endIndex = index; //determines where newInterval end should go in the new array
         while (endIndex < intervals.length-1 && newInterval[1] >= intervals[endIndex+1][0]) {
             endIndex++;
-        }
+        } //could probably do binarySearch for the end index too but i dont wanna right now. consider for the future
 
-        //newInterval fits within intervals[index] OR newInterval end < intervals[index+1][0]
+        //newInterval merges with intervals[index] OR newInterval end < intervals[index+1][0] and newInterval is inserted instead
         if (endIndex == index) {
-            intervals[index] = new int[] {intervals[index][0], Math.max(newInterval[1], intervals[index][1])};
+            if (newInterval[0] > intervals[index][1]) {
+                int[][] newArray = new int[intervals.length+1][];
+                newArray[index] = newInterval;
+                for (int i = 0; i < intervals.length; i++) {
+                    if (i == index) continue;
+                    newArray[i+1] = intervals[i];
+                }
+                return newArray;
+            }
+
+            intervals[index] = new int[] {Math.min(newInterval[0], intervals[index][0]), Math.max(newInterval[1], intervals[index][1])};
             return intervals;
         }
         
@@ -31,7 +53,7 @@ class Solution {
             if (i == index) {
                 // newArray[i] = new int[] {intervals[index][0], intervals[index+1][1]};
                 // counter++;
-                newArray[i] = new int[] {intervals[index][0], Math.max(newInterval[1], intervals[endIndex][1])};
+                newArray[i] = new int[] {Math.min(newInterval[0], intervals[index][0]), Math.max(newInterval[1], intervals[endIndex][1])};
                 counter += endIndex - index;
             }
             else newArray[i] = intervals[counter];
@@ -62,8 +84,11 @@ class Solution {
     }
 
     /**returns index of where to insert */
-    public int binarySearch(int newIntervalStart, int[][] intervals) {
+    public int binarySearch(int newInterval[], int[][] intervals) {
         if (intervals.length == 0) return 0;
+
+        int newIntervalStart = newInterval[0];
+        int newIntervalEnd = newInterval[1];
         int first = 0;
         int last = intervals.length;
         int middle = (first + last) / 2;
@@ -75,6 +100,8 @@ class Solution {
             middle = (first + last) / 2;
         }
 
+        if (intervals[middle][1] < newIntervalStart) return middle + 1;
+        else if (intervals[middle][0] > newIntervalEnd) return middle - 1;
         return middle;
     }
 }
