@@ -32,12 +32,16 @@ class Solution {
 
         //newInterval merges with intervals[index] OR newInterval end < intervals[index+1][0] and newInterval is inserted instead
         if (endIndex == index) {
-            if (newInterval[0] > intervals[index][1]) {
+            if (newInterval[0] > intervals[Math.max(index-1, 0)][1] && newInterval[1] < intervals[index][0]) {
                 int[][] newArray = new int[intervals.length+1][];
+                int counter = 0;
                 newArray[index] = newInterval;
                 for (int i = 0; i < intervals.length; i++) {
-                    if (i == index) continue;
-                    newArray[i+1] = intervals[i];
+                    if (i == index) {
+                        newArray[++counter] = intervals[i];
+                    }
+                    else newArray[counter] = intervals[i];
+                    counter++;
                 }
                 return newArray;
             }
