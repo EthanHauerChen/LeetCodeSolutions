@@ -1,6 +1,16 @@
 //https://leetcode.com/problems/insert-interval/description/
 
 class Solution {
+    /**
+     * NOTES:
+     * Initially, I thought that using binary search to find where the newInterval should be inserted would be best, since that is O(logn)
+     * however, this is only the case when newInterval merges with exactly 1 interval, in other words, when inserting newInterval does not change the size of the intervals array,
+     * since this means you can simply return the original array with just the 1 interval being replaced.
+     * If it were any other case where inserting newInterval would cause a different sized array from the original, then you would have to construct a new array and iterate through
+     * all the elements of the old intervals array as well as inserting the newInterval, which would be O(n).
+     * This simply means that it is still possible to optimize the newInterval insertion in some cases, but I will start from the O(n) solution, and then maybe add the O(logn) solution
+     * later if I feel like it, since it only helps in certain cases.
+     */
     public int[][] insert(int[][] intervals, int[] newInterval) {
         if (intervals.length == 0) return new int[][] {newInterval};
 
@@ -108,4 +118,6 @@ class Solution {
         else if (intervals[middle][0] > newIntervalEnd) return middle - 1;
         return middle;
     }
+
+    /**returns index of where end index belongs */
 }
