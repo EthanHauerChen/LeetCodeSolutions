@@ -13,10 +13,13 @@ class Solution {
         /*normal recursion 
         return coinChangeRecurse(coins, amount); */
 
-        /*memoization */
+        /*memoization 
         HashMap<Integer, Integer> map = new HashMap<>();
         return coinChangeMemo(coins, amount, map);
-        
+        */
+
+        /*tabulation */
+        return coinChangeTab(coins, amount);
     }
 
     /* normal recursion. works for the 3 small test cases, but is seemingly too slow for the other test cases 
@@ -42,7 +45,7 @@ class Solution {
     }
     */
 
-    /* memoization */
+    /* memoization 
     public int coinChangeMemo(int[] coins, int amount, HashMap<Integer, Integer> map) {
         if (amount == 0) return 0;
         if (amount < 0) return -1;
@@ -69,5 +72,24 @@ class Solution {
         }
         map.put(amount, min);
         return min;
+    } */
+
+    /*tabulation */
+    public int coinChangeTab(int[] coins, int amount) {
+        if (amount == 0) return 0;
+
+        int[] min = new int[amount+1]; 
+        Arrays.fill(min, amount+1);
+        min[0] = 0;
+
+        for (int i = 1; i <= amount; i++) {
+            for (int j = coins.length-1; j > -1; j--) {
+                if (i-coins[j] > -1) {
+                    min[i] = Math.min(min[i-coins[j]]+1, min[i]);
+                }
+            }
+        }
+
+        return min[amount] > amount ? -1 : min[amount];
     }
 }
