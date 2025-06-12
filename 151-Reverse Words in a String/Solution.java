@@ -28,8 +28,6 @@ class Solution {
         */
 
         /**Same solution as above but not using StringBuilder and maybe using a char array as the result variable instead
-        TODO
-        */
         String resultString;
         char[] result = new char[s.length()+1];
         char[] chars = s.toCharArray();
@@ -58,5 +56,19 @@ class Solution {
         }
         resultString = new String(result);
         return resultString.substring(0, counter+1);
+        */
+
+        /**Solution using String.split() 
+        Notes: seems to be a tad slower than the other solutions, but don't know for sure since LeetCode's runtime metric isn't very consistent
+        */
+        String[] unprocessed = s.split("\\s+");
+        StringBuilder result = new StringBuilder();
+        for (int i = unprocessed.length-1; i > -1; i--) {
+            result.append(unprocessed[i]);
+            result.append(" ");
+        }
+        result.setLength(result.length()-1);
+        return result.toString().trim();
     }
+       
 }
