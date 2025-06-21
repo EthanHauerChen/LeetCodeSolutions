@@ -11,10 +11,38 @@ class Solution {
         at a vowel and now is in the new range.
         5. solution is the largest number encountered
          */
+        char[] str = s.toCharArray();
         int max = 0;
-        boolean start = end = false;
-        for (int i = 0; i < s.length()-k; i++) {
-            
+        int count = 0;
+        boolean start, end;
+        start = isVowel(str[0]);
+        end = isVowel(str[k-1]);
+        for (int j = 0; j < k; j++) { //first iteration
+            if (isVowel(str[j])) count++;
         }
+        max = count;
+        for (int i = 1; i < str.length-k; i++) {
+            if (start && !isVowel(str[i])) {
+                count--;
+                start = false;
+            }
+            else if (!start && isVowel(str[i])) {
+                count++;
+                start = true;
+            }
+            if (end && !isVowel(str[i])) {
+                count--;
+                end = false;
+            }
+            else if (!end && isVowel(str[i])) {
+                count++;
+                end = true;
+            }
+            if (count > max) max = count;
+        }
+    }
+
+    public boolean isVowel(char c) {
+        return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
     }
 }
