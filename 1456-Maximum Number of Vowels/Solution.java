@@ -1,14 +1,12 @@
 //https://leetcode.com/problems/maximum-number-of-vowels-in-a-substring-of-given-length/
 class Solution {
     public int maxVowels(String s, int k) {
-        //"naive" approach
+        //"naive" approach. O(n) time.
         /**
         1. count num of vowels in the first k letters of the string
         2. set 2 pointers looking at start and end of the k letter range
         3. move the range of k letters over by 1
-        4. if a pointer was looking at a vowel before and then isn't in this new range, then
-        subtract 1 from the num of vowels in this new range. vice versa if pointer was NOT looking
-        at a vowel and now is in the new range.
+        4. if start pointer was looking at a vowel previously, then subtract 1. if end pointer sees a vowel, add 1
         5. solution is the largest number encountered
          */
         char[] str = s.toCharArray();
@@ -21,25 +19,27 @@ class Solution {
             if (isVowel(str[j])) count++;
         }
         max = count;
-        for (int i = 1; i < str.length-k; i++) {
-            if (start && !isVowel(str[i])) {
-                count--;
-                start = false;
-            }
-            else if (!start && isVowel(str[i])) {
-                count++;
-                start = true;
-            }
-            if (end && !isVowel(str[i])) {
-                count--;
-                end = false;
-            }
-            else if (!end && isVowel(str[i])) {
-                count++;
-                end = true;
-            }
+        // 00 = 0
+        // 01 = 0
+        // 10 = -
+        // 11 = -
+
+        // 11 = +
+        // 10 = 0
+        // 01 = +
+        // 00 = 0
+        for (int i = 1; i < str.length-k+1; i++) {
+            if (start) count--;
+            if (start != isVowel(str[i])) start = !start;
+
+            if (isVowel(str[i+k-1])) count++;
+            if (end != isVowel(str[i+k-1])) end = !end;
+            
             if (count > max) max = count;
+            //System.out.println("StartIndex: " + i + ". EndIndex: " + (i+k-1) + ". Start is now [" + start + "]. End is now [" + end + "]. Count is now [" + count + "]. Max is now [" + max + "]");
         }
+
+        return max;
     }
 
     public boolean isVowel(char c) {
