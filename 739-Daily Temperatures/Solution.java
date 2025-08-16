@@ -1,4 +1,5 @@
 //https://leetcode.com/problems/daily-temperatures/
+import java.util.EmptyStackException;
 
 class Solution {
     public int[] dailyTemperatures(int[] temperature) {
@@ -16,7 +17,7 @@ class Solution {
 
         return answers; */
 
-        //
+        /* this implementation sucks even worse
         int[] answer = new int[temperature.length];
         answer[temperature.length-1] = 0;
         TemperatureObject[] sortedTemps = new TemperatureObject[temperature.length];
@@ -31,9 +32,29 @@ class Solution {
                 int sortedIndex = sortedTemps[j].index;
                 int days = i - sortedIndex;
                 if (days <= 0) {}
-                else if (answer[sortedIndex] != 0) {}
+                else if (answer[sortedIndex] != 0) answer[sortedIndex] = Math.min(answer[sortedIndex], days);
                 else answer[sortedIndex] = days;
                 j++;
+            }
+        }
+
+        return answer; */
+
+        //use stack. if temp greater than stack.top, pop stack, else push
+        Stack<Integer> stack = new Stack<>();
+        int[] answer = new int[temperature.length];
+        for (int i = 0; i < temperature.length; i++) {
+            if (stack.empty() || stack.peek() >= temperature[i]) stack.push(temperature[i]);
+            else {
+                int count = 0;
+                try {
+                    while (temperature[i] > stack.peek()) {
+                        count++;
+                        stack.pop();
+                        answer[i-count] = count;
+                    }
+                } catch (EmptyStackException e) {}
+                stack.push(temperature[i]);
             }
         }
 
