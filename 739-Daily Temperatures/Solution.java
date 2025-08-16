@@ -23,12 +23,16 @@ class Solution {
         for (int i = 0; i < temperature.length; i++) sortedTemps[i] = new TemperatureObject(i, temperature[i]);
         Arrays.sort(sortedTemps);
         
-        for (int i = temperature.length-1; i > 0; i--) {
+        for (int i = 0; i < temperature.length; i++) {
             int currentTemp = temperature[i];
             //next step: keep the first j elements in sorted structure. only alter j that are colder than i
             int j = 0;
             while (sortedTemps[j].temperature < currentTemp) {
-                answer[sortedTemps[j].index] = i - sortedTemps[j].index > 0 ? Math.min(answer[sortedTemps[j].index], i - sortedTemps[j].index) : answer[sortedTemps[j].index];
+                int sortedIndex = sortedTemps[j].index;
+                int days = i - sortedIndex;
+                if (days <= 0) {}
+                else if (answer[sortedIndex] != 0) {}
+                else answer[sortedIndex] = days;
                 j++;
             }
         }
