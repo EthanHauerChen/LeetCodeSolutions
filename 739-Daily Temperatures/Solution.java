@@ -46,12 +46,12 @@ class Solution {
         for (int i = 0; i < temperature.length; i++) {
             if (stack.empty() || stack.peek() >= temperature[i]) stack.push(temperature[i]);
             else {
-                int count = 0;
+                int pops = 0;
                 try {
                     while (temperature[i] > stack.peek()) {
-                        count++;
+                        pops++;
                         stack.pop();
-                        answer[i-count] = count;
+                        answer[i-pops] = pops;
                     }
                 } catch (EmptyStackException e) {}
                 stack.push(temperature[i]);
