@@ -41,20 +41,18 @@ class Solution {
         return answer; */
 
         //use stack. if temp greater than stack.top, pop stack, else push
-        Stack<Integer> stack = new Stack<>();
+        Stack<TemperatureObject> stack = new Stack<>();
         int[] answer = new int[temperature.length];
         for (int i = 0; i < temperature.length; i++) {
-            if (stack.empty() || stack.peek() >= temperature[i]) stack.push(temperature[i]);
+            if (stack.empty() || stack.peek().temperature >= temperature[i]) stack.push(new TemperatureObject(i, temperature[i]));
             else {
-                int pops = 0;
                 try {
-                    while (temperature[i] > stack.peek()) {
-                        pops++;
-                        stack.pop();
-                        answer[i-pops] = pops;
+                    while (temperature[i] > stack.peek().temperature) {
+                        TemperatureObject temp = stack.pop();
+                        answer[temp.index] = i - temp.index;
                     }
                 } catch (EmptyStackException e) {}
-                stack.push(temperature[i]);
+                stack.push(new TemperatureObject(i, temperature[i]));
             }
         }
 
