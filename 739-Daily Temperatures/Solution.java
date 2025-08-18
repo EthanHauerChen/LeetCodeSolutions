@@ -40,7 +40,7 @@ class Solution {
 
         return answer; */
 
-        //use stack. if temp greater than stack.top, pop stack, else push
+        //use stack. if temp greater than stack.top, pop stack, else push O(n)
         Stack<TemperatureObject> stack = new Stack<>();
         int[] answer = new int[temperature.length];
         for (int i = 0; i < temperature.length; i++) {
