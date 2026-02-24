@@ -1,21 +1,25 @@
 # https://leetcode.com/problems/sliding-window-maximum
 class Solution:
     def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        # 
+
         # bst (using SortedCollections module which provides complexity nearly the same as bst, but is not bst implementation)
-        # bst = SortedList() #internal implementation not actually a bst, but has nearly bst time complexity
-        # maxVal = [float('-inf')]
-        # for i in range(k):
-        #     bst.add(nums[i])
-        #     maxVal[0] = max(maxVal[0], nums[i])
+        # sortedWindow = SortedList() # init a data structure that keeps track of all windows in sorted order (a balanced bst is common)
+        # maxVals = []
 
-        # for i in range(k, len(nums)):
-        #     bst.remove(nums[i - k ])
-        #     bst.add(nums[i])
-        #     maxVal.append(bst[-1])
+        # # first window
+        # for i in range(k): # init first window
+        #     sortedWindow.add(nums[i])
+        # maxVals.append(sortedWindow[-1])
+
+        # for i in range(k, len(nums)): # for all subsequent windows
+        #     # update the window, remove the leftmost value, add the next value
+        #     sortedWindow.remove(nums[i - k])
+        #     sortedWindow.add(nums[i])
+        #     maxVals.append(sortedWindow[-1]) # then add the maxVal of the current window
         
-        # return maxVal
+        # return maxVals
             
-
         # brute force
         # numWindows = len(nums) - k + 1
         # answer = [0] * numWindows
